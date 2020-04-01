@@ -28,6 +28,7 @@ The backup is written to a directory `/backup` inside the [Microsoft SQL Server]
 | Tag    | Description                                                                             | Size                                                                                                                  |
 |--------|-----------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
 | latest | Latest master build                                                                     | ![Size](https://shields.beevelop.com/docker/image/image-size/bbtsoftwareag/mssql-backup/latest.svg?style=flat-square) |
+| 0.1.0  | Release [0.1.0](https://github.com/bbtsoftware/docker-mssql-backup/releases/tag/0.1.0)  | ![Size](https://shields.beevelop.com/docker/image/image-size/bbtsoftwareag/mssql-backup/0.1.0.svg?style=flat-square)  |
 
 ### Configuration
 
