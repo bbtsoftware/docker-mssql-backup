@@ -1,4 +1,5 @@
 FROM mcr.microsoft.com/mssql-tools:latest
+LABEL MAINTAINER="BBT Software AG <opensource@bbtsoftware.ch>"
 
 ENV DB_SERVER="mssql" \
     DB_USER="SA" \
