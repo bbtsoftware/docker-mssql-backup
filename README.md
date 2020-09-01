@@ -74,7 +74,7 @@ services:
       - "DB_NAMES=
           MyFirstDatabaseToRestore
           MySecondDatabaseToRestore"
-      - CRON_SCHEDULE="0 1 * * *"
+      - CRON_SCHEDULE=0 1 * * *
     networks:
       - default
 ```
