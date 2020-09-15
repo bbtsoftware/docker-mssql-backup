@@ -22,6 +22,7 @@ This container can create backups on a [Microsoft SQL Server] container.
 
 **NOTE:**
 The backup is written to a directory `/backup` inside the [Microsoft SQL Server] container, not to a volume in the backup container.
+For using the cleanup feature attach the same `/backup` volume in the `bbtsoftwareag/mssql-backup` container.
 
 ### Tags
 
@@ -29,6 +30,7 @@ The backup is written to a directory `/backup` inside the [Microsoft SQL Server]
 |--------|-----------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
 | latest | Latest master build                                                                     | ![Size](https://shields.beevelop.com/docker/image/image-size/bbtsoftwareag/mssql-backup/latest.svg?style=flat-square) |
 | 0.1.0  | Release [0.1.0](https://github.com/bbtsoftware/docker-mssql-backup/releases/tag/0.1.0)  | ![Size](https://shields.beevelop.com/docker/image/image-size/bbtsoftwareag/mssql-backup/0.1.0.svg?style=flat-square)  |
+| 0.2.0  | Release [0.2.0](https://github.com/bbtsoftware/docker-mssql-backup/releases/tag/0.2.0)  | ![Size](https://shields.beevelop.com/docker/image/image-size/bbtsoftwareag/mssql-backup/0.2.0.svg?style=flat-square)  |
 
 ### Configuration
 
@@ -42,6 +44,8 @@ These environment variables are supported:
 | DB_NAMES             |               | Names of the databases for which a backup should be created.                                                                                                                                                                     |
 | TZ                   |               | Timezone to use.                                                                                                                                                                                                                 |
 | CRON_SCHEDULE        | `0 1 * * sun` | Cron schedule for running backups. NOTE: There is no check if there's already a backup running when starting the backup job. Therefore time interval needs to be longer than the maximum expected backup time for all databases. |
+| BACKUP_CLEANUP      | `false` | Set to "true" if you want to let the cronjob remove files older than $BACKUP_AGE days |
+| BACKUP_AGE          | `7` | Number of days to keep backups in backup directory |
 
 ## Examples
 
@@ -61,20 +65,23 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_PID=Express
-      - SA_PASSWORD=MySecretPassword
+      - SA_PASSWORD=MySecre(12)tPassword
     networks:
       - default
   backup:
     image: bbtsoftwareag/mssql-backup
+    # for using the cleanup feature, use the backup volume from db.
+    # volumes:
+    #   - /storage/backup:/backup
     environment:
       - TZ=Europe/Zurich
       - DB_SERVER=db
       - DB_USER=SA
-      - DB_PASSWORD=MySecretPassword
+      - DB_PASSWORD=MySecre(12)tPassword
       - "DB_NAMES=
           MyFirstDatabaseToRestore
           MySecondDatabaseToRestore"
-      - CRON_SCHEDULE="0 1 * * *"
+      - CRON_SCHEDULE=0 1 * * *
     networks:
       - default
 ```
