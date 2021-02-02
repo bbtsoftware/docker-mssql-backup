@@ -46,7 +46,7 @@ These environment variables are supported:
 | CRON_SCHEDULE        | `0 1 * * sun` | Cron schedule for running backups. NOTE: There is no check if there's already a backup running when starting the backup job. Therefore time interval needs to be longer than the maximum expected backup time for all databases. |
 | BACKUP_CLEANUP      | `false` | Set to "true" if you want to let the cronjob remove files older than $BACKUP_AGE days |
 | BACKUP_AGE          | `7` | Number of days to keep backups in backup directory |
-| PACK                | `tar` | Packs the output files into a single `.tar.gz`-File. Uses the `/backup_temp` directory inside the [Microsoft SQL Server] container. Another supported value is `zip`.
+| PACK                | `tar` | Packs the output files into a single `.tar.gz`-File. Uses the `/backup_temp` directory inside the [Microsoft SQL Server] container to temporarily store the files and moves them to `/backup` afterwards. Another supported value is `zip`.
 | ZIP_PASSWORD        | `MySecretPassword123` | Sets the password for the zip to the given value. Only works if `PACK` is set to `zip`
 
 ## Examples
