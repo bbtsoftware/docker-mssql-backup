@@ -7,10 +7,13 @@ ENV DB_SERVER="mssql" \
     DB_NAMES="" \
     CRON_SCHEDULE="0 1 * * sun" \
     BACKUP_CLEANUP=false \
-    BACKUP_AGE=7
+    BACKUP_AGE=7 \    
+    PACK=true \
+    ZIP_PASSWORD="MySecretPassword123"
 
 RUN apt-get update && \
     apt-get install -y cron && \
+    apt-get install -y zip && \ 
     rm -rf /var/cache/apk/*
 
 COPY backup.sh /usr/local/bin/

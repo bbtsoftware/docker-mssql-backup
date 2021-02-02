@@ -15,4 +15,5 @@ USER mssql
 RUN ( /opt/mssql/bin/sqlservr & ) | grep -q "Service Broker manager has started" \
     && sleep 5s \
     && /opt/mssql-tools/bin/sqlcmd -U sa -P ${SA_PASSWORD} -Q 'RESTORE DATABASE AdventureWorks2019 FROM DISK = "/var/opt/mssql/backup/AdventureWorksLT2019.bak" WITH MOVE "AdventureWorksLT2012_Data" to "/var/opt/mssql/data/AdventureWorks2019.mdf", MOVE "AdventureWorksLT2012_Log" to "/var/opt/mssql/data/AdventureWorks2019_log.ldf", NOUNLOAD, STATS = 5' \
-    && pkill sqlservr
+    && pkill sqlservr \
+    && /opt/mssql-tools/bin/sqlcmd -U sa -P ${SA_PASSWORD} -Q 'USE [AdventureWorks2019] ; ALTER DATABASE [AdventureWorks2019] SET RECOVERY FULL;'

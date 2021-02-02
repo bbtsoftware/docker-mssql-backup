@@ -6,6 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile.mssql
     volumes:
+      - ./backup/temp:/backup_temp
       - ./backup:/backup
     networks:
       - default
@@ -13,6 +14,7 @@ services:
     build:
       context: ../
     volumes:
+      - ./backup/temp:/backup_temp
       - ./backup:/backup
       - ../backup.sh:/usr/local/bin/backup.sh
     environment:
