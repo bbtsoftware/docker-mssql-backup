@@ -18,11 +18,20 @@ services:
       - ./backup:/backup
       - ../backup.sh:/usr/local/bin/backup.sh
     environment:
-      - TZ=Europe/Berlin
-      - DB_SERVER=db
-      - DB_USER=SA
-      - DB_PASSWORD=MySqlServerPassword1234
-      - "DB_NAMES=AdventureWorks2019"
-      - CRON_SCHEDULE=0 1 * * *
+      - TZ
+      - DB_SERVER
+      - DB_USER
+      - DB_PASSWORD
+      - DB_NAMES
+      - CRON_SCHEDULE
+      - BACKUP_CLEANUP
+      - BACKUP_AGE
+      - SMTP_HOST
+      - SMTP_PORT
+      - SMTP_USER
+      - SMTP_PASS
+      - SMTP_FROM
+      - SMTP_TLS
+      - MAIL_TO
     networks:
       - default
