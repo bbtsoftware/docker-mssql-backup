@@ -3,16 +3,33 @@
 # Create mail config if defined
 if [[ $SMTP_HOST ]]; then
 
-    cat << EOF > /etc/ssmtp/ssmtp.conf
-root=$SMTP_FROM
-mailhub=$SMTP_HOST
-AuthUser=$SMTP_USER
-AuthPass=$SMTP_PASS
-UseSTARTTLS=$SMTP_TLS
-UseTLS=$SMTP_TLS
-FromLineOverride=YES
-hostname=localhost localhost.localdomain
+    cat << EOF > /etc/msmtprc
+defaults
+
+host $SMTP_HOST
+port $SMTP_PORT
+tls $SMTP_TLS
+tls_starttls $SMTP_TLS
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+tls_certcheck $SMTP_TLS
+
+account $SMTP_USER
+auth on
+user $SMTP_USER
+password "$SMTP_PASS"
+from "$SMTP_USER"
+
+account default: $SMTP_USER
+
+aliases /etc/aliases
 EOF
+
+    cat << EOF > /etc/aliases
+root: $SMTP_FROM
+default: $SMTP_FROM
+EOF
+
+    echo 'set sendmail="/usr/bin/msmtp -t"' > /etc/mail.rc
 
 fi
 

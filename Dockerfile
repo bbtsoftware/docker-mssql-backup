@@ -9,14 +9,15 @@ ENV DB_SERVER="mssql" \
     BACKUP_CLEANUP=false \
     BACKUP_AGE=7 \
     SMTP_HOST="" \
+    SMTP_PORT="" \
     SMTP_USER="" \
     SMTP_PASS="" \
     SMTP_FROM="" \
-    SMTP_TLS="YES" \
+    SMTP_TLS="on" \
     MAIL_TO=""
 
 RUN apt-get update && \
-    apt-get install -y cron ssmtp mailutils && \
+    apt-get install -y cron msmtp msmtp-mta mailutils && \
     rm -rf /var/cache/apk/*
 
 COPY backup.sh /usr/local/bin/
