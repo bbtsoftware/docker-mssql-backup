@@ -8,8 +8,8 @@ ENV DB_SERVER="mssql" \
     CRON_SCHEDULE="0 1 * * sun" \
     BACKUP_CLEANUP=false \
     BACKUP_AGE=7 \    
-    PACK=true \
-    ZIP_PASSWORD="MySecretPassword123"
+    PACK="" \
+    ZIP_PASSWORD=""
 
 RUN apt-get update && \
     apt-get install -y cron && \
