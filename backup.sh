@@ -13,7 +13,7 @@ for CURRENT_DB in $DB_NAMES
 do
 
   if [ "$ZIP_RESULT" = true ]; then 
-    WORKDIR="/backup_temp"
+    WORKDIR="/backup_tmp"
   else 
     WORKDIR="/backup"
   fi
@@ -46,10 +46,10 @@ do
     cd "$WORKDIR"
     FILES=$(find . -type f \( -name \*\.bak -o -name \*\.trn \))
     if [ "$PACK" = "tar" ]; then 
-      ARCHIVE_FILENAME="/backup_temp/$CURRENT_DATE-$CURRENT_DB.tar.gz"
+      ARCHIVE_FILENAME="/backup_tmp/$CURRENT_DATE-$CURRENT_DB.tar.gz"
       tar cfvz "$ARCHIVE_FILENAME" -C "$WORKDIR" $FILES
     elif [ "$PACK" = "zip" ]; then
-      ARCHIVE_FILENAME="/backup_temp/$CURRENT_DATE-$CURRENT_DB.zip"
+      ARCHIVE_FILENAME="/backup_tmp/$CURRENT_DATE-$CURRENT_DB.zip"
       if [ "$ZIP_PASSWORD" ]; then 
         zip --password "$ZIP_PASSWORD" "$ARCHIVE_FILENAME" $FILES
       else
