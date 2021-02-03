@@ -44,9 +44,11 @@ These environment variables are supported:
 | DB_NAMES             |               | Names of the databases for which a backup should be created.                                                                                                                                                                     |
 | TZ                   |               | Timezone to use.                                                                                                                                                                                                                 |
 | CRON_SCHEDULE        | `0 1 * * sun` | Cron schedule for running backups. NOTE: There is no check if there's already a backup running when starting the backup job. Therefore time interval needs to be longer than the maximum expected backup time for all databases. |
-| BACKUP_CLEANUP      | `false` | Set to "true" if you want to let the cronjob remove files older than $BACKUP_AGE days |
-| BACKUP_AGE          | `7` | Number of days to keep backups in backup directory |
-| SKIP_BACKUP_LOG     | `false`        | Skip step to backup the transaction log
+| BACKUP_CLEANUP       | `false`       | Set to "true" if you want to let the cronjob remove files older than $BACKUP_AGE days                                                                                                                                            |
+| BACKUP_AGE           | `7`           | Number of days to keep backups in backup directory                                                                                                                                                                               |
+| SKIP_BACKUP_LOG      | `false`       | Skip step to backup the transaction log                                                                                                                                                                                          |
+| PACK                 |               | Possible values: `tar`, `zip`. <br><br> If defined, compresses the output files into a single `.tar.gz` (or `zip`)-File. Uses the `/backup_tmp` directory inside the [Microsoft SQL Server] container to temporarily store the files and moves them to `/backup` afterwards. <br><br> **IMPORTANT**: When using this feature, you have to map the `/backup_tmp` volume inside your [Microsoft SQL Server] and the backup image. |
+| ZIP_PASSWORD         |               | Sets the password for the zip to the given value. Only works if `PACK` is set to `zip`                                                                                                                                           |
 
 ## Examples
 
