@@ -26,6 +26,9 @@ services:
       - CRON_SCHEDULE
       - BACKUP_CLEANUP
       - BACKUP_AGE
+      - SKIP_BACKUP_LOG
+      - PACK
+      - ZIP_PASSWORD
       - SMTP_HOST
       - SMTP_PORT
       - SMTP_USER

@@ -46,20 +46,32 @@ do
 
   # package backup files into tar.gz or zip file
   if [ "$PACK" = "tar" ] || [ "$PACK" = "zip" ]; then
+    echo ""
     cd "$WORKDIR"
     FILES=$(find . -type f \( -name \*\.bak -o -name \*\.trn \))
     if [ "$PACK" = "tar" ]; then
       ARCHIVE_FILENAME="/backup_tmp/$CURRENT_DATE-$CURRENT_DB.tar.gz"
-      tar cfvz "$ARCHIVE_FILENAME" -C "$WORKDIR" $FILES
+      tar cfvz "$ARCHIVE_FILENAME" $FILES
+      retval=$?
     elif [ "$PACK" = "zip" ]; then
       ARCHIVE_FILENAME="/backup_tmp/$CURRENT_DATE-$CURRENT_DB.zip"
       if [ "$ZIP_PASSWORD" ]; then
         zip --password "$ZIP_PASSWORD" "$ARCHIVE_FILENAME" $FILES
+        retval=$?
       else
         zip "$ARCHIVE_FILENAME" $FILES
+        retval=$?
       fi
     fi
-    mv  "$ARCHIVE_FILENAME" "/backup"
+
+    echo "Packing up results to $ARCHIVE_FILENAME"
+    if [ $retval -eq 0 ]; then
+        echo "Successfully packed backup into $ARCHIVE_FILENAME"
+        mv "$ARCHIVE_FILENAME" "/backup"
+    else
+        echo "Failed creating $ARCHIVE_FILENAME"
+    fi
+
     rm -rf $FILES
   fi
 
