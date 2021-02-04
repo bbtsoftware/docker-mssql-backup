@@ -18,4 +18,5 @@ crontab /etc/cron.d/crontab.conf
 touch /var/log/cron.log
 
 echo "Starting cron task manager..."
+echo "$cronSchedule"
 cron && tail -f /var/log/cron.log
