@@ -46,7 +46,9 @@ These environment variables are supported:
 | CRON_SCHEDULE        | `0 1 * * sun` | Cron schedule for running backups. NOTE: There is no check if there's already a backup running when starting the backup job. Therefore time interval needs to be longer than the maximum expected backup time for all databases. |
 | BACKUP_CLEANUP       | `false`       | Set to "true" if you want to let the cronjob remove files older than $BACKUP_AGE days                                                                                                                                            |
 | BACKUP_AGE           | `7`           | Number of days to keep backups in backup directory                                                                                                                                                                               |
-| SKIP_BACKUP_LOG      | `false`       | Skip step to backup the transaction log .                                                                                                                                                                                         |
+| SKIP_BACKUP_LOG      | `false`       | Skip step to backup the transaction log .                                                                                                                                                                                        |
+| PACK                 |               | Possible values: `tar`, `zip`. If defined, compresses the output files into a single `.tar.gz` (or `zip`)-File.                                                                                                                  |
+| ZIP_PASSWORD         |               | Sets the password for the zip to the given value. Only works if `PACK` is set to `zip`                                                                                                                                           |
 
 ## Examples
 

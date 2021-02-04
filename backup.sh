@@ -47,10 +47,41 @@ do
     echo "Backup of log skipped."
   fi
 
-  # Move files from intermediate work to target directory
-  echo "Copy backup files to target directory"
-  find $WORKDIR -type f -name "*.$CURRENT_DB.bak" -exec mv {} $TARGETDIR \;
-  find $WORKDIR -type f -name "*.$CURRENT_DB.trn" -exec mv {} $TARGETDIR \;
+  if [ "$PACK" = "tar" ] || [ "$PACK" = "zip" ]; then
+    # compress backup files into tar.gz or zip file
+    echo ""
+    echo "Compress backup files"
+    FILES=$(find $WORKDIR -type f \( -name \*\.bak -o -name \*\.trn \))
+    if [ "$PACK" = "tar" ]; then
+      ARCHIVE_FILENAME="$WORKDIR/$CURRENT_DATE.$CURRENT_DB.tar.gz"
+      tar cfvz "$ARCHIVE_FILENAME" $FILES
+      retval=$?
+    elif [ "$PACK" = "zip" ]; then
+      ARCHIVE_FILENAME="$WORKDIR/$CURRENT_DATE.$CURRENT_DB.zip"
+      if [ "$ZIP_PASSWORD" ]; then
+        zip --password "$ZIP_PASSWORD" "$ARCHIVE_FILENAME" $FILES
+        retval=$?
+      else
+        zip "$ARCHIVE_FILENAME" $FILES
+        retval=$?
+      fi
+    fi
+
+    echo "Packing up results to $ARCHIVE_FILENAME"
+    if [ $retval -eq 0 ]; then
+        echo "Successfully packed backup into $ARCHIVE_FILENAME"
+        mv "$ARCHIVE_FILENAME" "$TARGETDIR"
+    else
+        echo "Failed creating $ARCHIVE_FILENAME"
+    fi
+
+    rm -rf $FILES
+  else
+    # Move files from intermediate work to target directory
+    echo "Move backup files to target directory"
+    find $WORKDIR -type f -name "*.$CURRENT_DB.bak" -exec mv {} $TARGETDIR \;
+    find $WORKDIR -type f -name "*.$CURRENT_DB.trn" -exec mv {} $TARGETDIR \;
+  fi
 
   # Delete intermediate directory
   echo "Delete intermediate directory"
@@ -65,6 +96,12 @@ do
 
     find $TARGETDIR -type f -name "*.$CURRENT_DB.trn" -mtime +"$BACKUP_AGE" -exec echo {} " is deleted" \;
     find $TARGETDIR -type f -name "*.$CURRENT_DB.trn" -mtime +"$BACKUP_AGE" -exec rm {} \;
+
+    find $TARGETDIR -type f -name "*.$CURRENT_DB.zip" -mtime +"$BACKUP_AGE" -exec echo {} " is deleted" \;
+    find $TARGETDIR -type f -name "*.$CURRENT_DB.zip" -mtime +"$BACKUP_AGE" -exec rm {} \;
+
+    find $TARGETDIR -type f -name "*.$CURRENT_DB.tar.gz" -mtime +"$BACKUP_AGE" -exec echo {} " is deleted" \;
+    find $TARGETDIR -type f -name "*.$CURRENT_DB.tar.gz" -mtime +"$BACKUP_AGE" -exec rm {} \;
   else
     echo "Backup files cleanup is disabled"
   fi
