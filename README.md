@@ -87,4 +87,19 @@ services:
       - default
 ```
 
+### Example environment
+
+We added a small docker environment in the [example](https://github.com/bbtsoftware/docker-mssql-backup/tree/develop/example)
+subdirectory for `development` or `tests` with a own [readme](https://github.com/bbtsoftware/docker-mssql-backup/blob/develop/example/README.md) file.
+
+## Discussion
+
+For questions and to discuss ideas & feature requests, use the [GitHub discussions on the BBT Software docker-mssql-backup repository](https://github.com/bbtsoftware/docker-mssql-backup/discussions).
+
+[![Join in the discussion on the BBT Software docker-mssql-backup repository](https://img.shields.io/badge/GitHub-Discussions-green?logo=github)](https://github.com/bbtsoftware/docker-mssql-backup/discussions)
+
+## Contributing
+
+Contributions are welcome. See [Contribution Guidelines](CONTRIBUTING.md).
+
 [Microsoft SQL Server]: https://hub.docker.com/_/microsoft-mssql-server
