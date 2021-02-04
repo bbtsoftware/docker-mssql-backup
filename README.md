@@ -50,6 +50,13 @@ These environment variables are supported:
 | PACK                 |               | Possible values: `tar`, `zip`. If defined, compresses the output files into a single `.tar.gz` (or `zip`)-File.                                                                                                                  |
 | ZIP_PASSWORD         |               | Sets the password for the zip to the given value. Only works if `PACK` is set to `zip`                                                                                                                                           |
 | PUSH_REMOTE_MODE     |               | The possible values `move` or `copy` activates pushing the backup files to a mapped remote directory. The volume `remote` must be mapped.                                                                                        |
+| SMTP_HOST            |               | If this is set, email reporting is enabled by sending the results of the backup process to `MAIL_TO`. You pretty much have to define all the other `SMTP_*` variables, when the host is defined.                                 |
+| SMTP_PORT            |               | The port of the SMTP server                                                                                                                                                                                                      |
+| SMTP_USER            |               | The username used to login against the SMTP server                                                                                                                                                                               |
+| SMTP_PASS            |               | The password for connecting to the SMTP server                                                                                                                                                                                   |
+| SMTP_FROM            |               | The E-mail address from which mails should be sent from                                                                                                                                                                          |
+| SMTP_TLS             | `on`          | Whether TLS should be used when connecting to the SMTP server                                                                                                                                                                    |
+| MAIL_TO              |               | The target E-mail address for receiving mail reports                                                                                                                                                                             |
 
 ## Examples
 

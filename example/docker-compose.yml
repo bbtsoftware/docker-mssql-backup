@@ -14,6 +14,7 @@ services:
       context: ../
     volumes:
       - ./backup:/backup
+      - ./log:/var/log
       - ./remote:/remote
       - ../backup.sh:/usr/local/bin/backup.sh
     environment:
@@ -31,6 +32,7 @@ services:
       - PUSH_REMOTE_MODE
       - SMTP_HOST
       - SMTP_PORT
+      - SMTP_AUTH
       - SMTP_USER
       - SMTP_PASS
       - SMTP_FROM
