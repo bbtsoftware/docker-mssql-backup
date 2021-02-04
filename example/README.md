@@ -31,3 +31,10 @@ is used for backup.
 To run this example container execute the command:
 
 `docker-compose up`
+
+## Test backup file cleanup
+
+How to modify a backup file `lastwritetime` file setting, to test the backup file cleanup function.
+This example changes the `lastwritetime` file setting of `202102041519.AdventureWorks2019.tar.gz` to `2011-09-14T07:10:00`.
+
+`$(Get-Item 202102041519.AdventureWorks2019.tar.gz).lastwritetime=$(Get-Date "2011-09-14T07:10:00")`
