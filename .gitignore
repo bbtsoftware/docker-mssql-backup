@@ -1,0 +1,6 @@
+
+# Ignore example backup files
+example/backup/
+
+# Ignore environment variable file
+example/.env

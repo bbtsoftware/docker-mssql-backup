@@ -1,0 +1,20 @@
+# Adventure Works Database on SQL Server 2019
+FROM mcr.microsoft.com/mssql/server
+
+# Note: This isn't a secure password, and please don't use this for production.
+ENV SA_PASSWORD=MySqlServerPassword1234
+ENV ACCEPT_EULA=Y
+
+ADD https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorksLT2019.bak /var/opt/mssql/backup/
+
+USER root
+RUN chown -R mssql /var/opt/mssql/backup
+USER mssql
+
+# Launch SQL Server, confirm startup is complete, restore the database, then terminate SQL Server.
+RUN ( /opt/mssql/bin/sqlservr & ) | grep -q "Service Broker manager has started" \
+    && sleep 5s \
+    && /opt/mssql-tools/bin/sqlcmd -U sa -P ${SA_PASSWORD} -Q 'RESTORE DATABASE AdventureWorks2019 FROM DISK = "/var/opt/mssql/backup/AdventureWorksLT2019.bak" WITH MOVE "AdventureWorksLT2012_Data" to "/var/opt/mssql/data/AdventureWorks2019.mdf", MOVE "AdventureWorksLT2012_Log" to "/var/opt/mssql/data/AdventureWorks2019_log.ldf", NOUNLOAD, STATS = 5' \
+    && /opt/mssql-tools/bin/sqlcmd -U sa -P ${SA_PASSWORD} -Q 'USE [AdventureWorks2019] ; ALTER DATABASE [AdventureWorks2019] SET RECOVERY FULL;' \
+    && pkill sqlservr
+    
