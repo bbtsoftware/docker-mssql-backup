@@ -44,8 +44,9 @@ These environment variables are supported:
 | DB_NAMES             |               | Names of the databases for which a backup should be created.                                                                                                                                                                     |
 | TZ                   |               | Timezone to use.                                                                                                                                                                                                                 |
 | CRON_SCHEDULE        | `0 1 * * sun` | Cron schedule for running backups. NOTE: There is no check if there's already a backup running when starting the backup job. Therefore time interval needs to be longer than the maximum expected backup time for all databases. |
-| BACKUP_CLEANUP      | `false` | Set to "true" if you want to let the cronjob remove files older than $BACKUP_AGE days |
-| BACKUP_AGE          | `7` | Number of days to keep backups in backup directory |
+| BACKUP_CLEANUP       | `false`       | Set to "true" if you want to let the cronjob remove files older than $BACKUP_AGE days                                                                                                                                            |
+| BACKUP_AGE           | `7`           | Number of days to keep backups in backup directory                                                                                                                                                                               |
+| SKIP_BACKUP_LOG      | `false`       | Skip step to backup the transaction log .                                                                                                                                                                                         |
 
 ## Examples
 

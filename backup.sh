@@ -25,15 +25,19 @@ do
   fi
 
   # backup log files
-  TRN_FILENAME=/backup/$CURRENT_DATE.$CURRENT_DB.trn
+  if [ "$SKIP_BACKUP_LOG" = false ]; then
+    TRN_FILENAME=/backup/$CURRENT_DATE.$CURRENT_DB.trn
 
-  echo "Backup log of $CURRENT_DB to $TRN_FILENAME on $DB_SERVER..."
-  if /opt/mssql-tools/bin/sqlcmd -S "$DB_SERVER" -U "$DB_USER" -P "$DB_PASSWORD" -b -Q "BACKUP LOG [$CURRENT_DB] TO DISK = N'$TRN_FILENAME' WITH NOFORMAT, NOINIT, NAME = '$CURRENT_DB-log', SKIP, NOUNLOAD, STATS = 10"
-  then
-    echo "Backup of log successfully created"
+    echo "Backup log of $CURRENT_DB to $TRN_FILENAME on $DB_SERVER..."
+    if /opt/mssql-tools/bin/sqlcmd -S "$DB_SERVER" -U "$DB_USER" -P "$DB_PASSWORD" -b -Q "BACKUP LOG [$CURRENT_DB] TO DISK = N'$TRN_FILENAME' WITH NOFORMAT, NOINIT, NAME = '$CURRENT_DB-log', SKIP, NOUNLOAD, STATS = 10"
+    then
+      echo "Backup of log successfully created"
+    else
+      echo "Error creating log backup"
+      rm -rf "$TRN_FILENAME"
+    fi
   else
-    echo "Error creating log backup"
-    rm -rf "$TRN_FILENAME"
+    echo "Backup of log skipped."
   fi
 
   # cleanup old backup files
