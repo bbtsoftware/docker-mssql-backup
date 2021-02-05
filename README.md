@@ -49,6 +49,7 @@ These environment variables are supported:
 | SKIP_BACKUP_LOG      | `false`       | Skip step to backup the transaction log .                                                                                                                                                                                        |
 | PACK                 |               | Possible values: `tar`, `zip`. If defined, compresses the output files into a single `.tar.gz` (or `zip`)-File.                                                                                                                  |
 | ZIP_PASSWORD         |               | Sets the password for the zip to the given value. Only works if `PACK` is set to `zip`                                                                                                                                           |
+| PUSH_REMOTE_MODE     |               | The possible values `move` or `copy` activates pushing the backup files to a mapped remote directory. The volume `remote` must be mapped.                                                                                        |
 
 ## Examples
 

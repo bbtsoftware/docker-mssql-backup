@@ -16,6 +16,9 @@ WORKDIR="/backup/$CURRENT_DATE"
 # Target backup directory
 TARGETDIR="/backup"
 
+# Remote backup directory
+REMOTEDIR="/remote"
+
 for CURRENT_DB in $DB_NAMES
 do
 
@@ -70,7 +73,7 @@ do
     echo "Packing up results to $ARCHIVE_FILENAME"
     if [ $retval -eq 0 ]; then
         echo "Successfully packed backup into $ARCHIVE_FILENAME"
-        mv "$ARCHIVE_FILENAME" "$TARGETDIR"
+        cp "$ARCHIVE_FILENAME" "$TARGETDIR"
     else
         echo "Failed creating $ARCHIVE_FILENAME"
     fi
@@ -78,30 +81,39 @@ do
     rm -rf $FILES
   else
     # Move files from intermediate work to target directory
-    echo "Move backup files to target directory"
-    find $WORKDIR -type f -name "*.$CURRENT_DB.bak" -exec mv {} $TARGETDIR \;
-    find $WORKDIR -type f -name "*.$CURRENT_DB.trn" -exec mv {} $TARGETDIR \;
+    echo "Copy backup files to target directory"
+    find $WORKDIR -type f -name "*.$CURRENT_DB.bak"     -exec cp {} $TARGETDIR \;
+    find $WORKDIR -type f -name "*.$CURRENT_DB.trn"     -exec cp {} $TARGETDIR \;
   fi
 
-  # Delete intermediate directory
-  echo "Delete intermediate directory"
-  rmdir $WORKDIR
+  # Push to remote directory
+  if [ "$PUSH_REMOTE_MODE" = "move" ] || [ "$PUSH_REMOTE_MODE" = "copy" ]; then
+    echo "Push backup to remote directory"
+    find $WORKDIR -type f -name "*.$CURRENT_DB.*" -exec cp {} $REMOTEDIR \;
+
+    if [ "$PUSH_REMOTE_MODE" = "move" ]; then
+      echo "Cleanup target directory"
+      find $TARGETDIR -type f -name "*.$CURRENT_DB.*" -exec rm {} \;
+    fi
+  fi
+
+  # Cleanup intermediate directory
+  echo "Cleanup intermediate directory"
+  find $WORKDIR -type f -name "*.$CURRENT_DB.*" -exec rm {} \;
+  rm -rf $WORKDIR
 
   # Cleanup old backup files in target directory
   if [ "$BACKUP_CLEANUP" = true ]; then
     echo ""
     echo "Backup cleanup is activated"
-    find $TARGETDIR -type f -name "*.$CURRENT_DB.bak" -mtime +"$BACKUP_AGE" -exec echo {} " is deleted" \;
-    find $TARGETDIR -type f -name "*.$CURRENT_DB.bak" -mtime +"$BACKUP_AGE" -exec rm {} \;
+    find $TARGETDIR -type f -name "*.$CURRENT_DB.*" -mtime +"$BACKUP_AGE" -exec echo {} " is deleted" \;
+    find $TARGETDIR -type f -name "*.$CURRENT_DB.*" -mtime +"$BACKUP_AGE" -exec rm {} \;
 
-    find $TARGETDIR -type f -name "*.$CURRENT_DB.trn" -mtime +"$BACKUP_AGE" -exec echo {} " is deleted" \;
-    find $TARGETDIR -type f -name "*.$CURRENT_DB.trn" -mtime +"$BACKUP_AGE" -exec rm {} \;
-
-    find $TARGETDIR -type f -name "*.$CURRENT_DB.zip" -mtime +"$BACKUP_AGE" -exec echo {} " is deleted" \;
-    find $TARGETDIR -type f -name "*.$CURRENT_DB.zip" -mtime +"$BACKUP_AGE" -exec rm {} \;
-
-    find $TARGETDIR -type f -name "*.$CURRENT_DB.tar.gz" -mtime +"$BACKUP_AGE" -exec echo {} " is deleted" \;
-    find $TARGETDIR -type f -name "*.$CURRENT_DB.tar.gz" -mtime +"$BACKUP_AGE" -exec rm {} \;
+    if [ "$PUSH_REMOTE_MODE" = "move" ] || [ "$PUSH_REMOTE_MODE" = "copy" ]; then
+      echo "Cleanup remote directory"
+      find $REMOTEDIR -type f -name "*.$CURRENT_DB.*" -mtime +"$BACKUP_AGE" -exec echo {} " is deleted" \;
+      find $REMOTEDIR -type f -name "*.$CURRENT_DB.*" -mtime +"$BACKUP_AGE" -exec rm {} \;
+    fi
   else
     echo "Backup files cleanup is disabled"
   fi
