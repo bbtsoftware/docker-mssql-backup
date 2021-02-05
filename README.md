@@ -31,6 +31,7 @@ For using the cleanup feature attach the same `/backup` volume in the `bbtsoftwa
 | latest | Latest master build                                                                     | ![Size](https://shields.beevelop.com/docker/image/image-size/bbtsoftwareag/mssql-backup/latest.svg?style=flat-square) |
 | 0.1.0  | Release [0.1.0](https://github.com/bbtsoftware/docker-mssql-backup/releases/tag/0.1.0)  | ![Size](https://shields.beevelop.com/docker/image/image-size/bbtsoftwareag/mssql-backup/0.1.0.svg?style=flat-square)  |
 | 0.2.0  | Release [0.2.0](https://github.com/bbtsoftware/docker-mssql-backup/releases/tag/0.2.0)  | ![Size](https://shields.beevelop.com/docker/image/image-size/bbtsoftwareag/mssql-backup/0.2.0.svg?style=flat-square)  |
+| 0.3.0  | Release [0.2.0](https://github.com/bbtsoftware/docker-mssql-backup/releases/tag/0.3.0)  | ![Size](https://shields.beevelop.com/docker/image/image-size/bbtsoftwareag/mssql-backup/0.3.0.svg?style=flat-square)  |
 
 ### Configuration
 
@@ -44,8 +45,19 @@ These environment variables are supported:
 | DB_NAMES             |               | Names of the databases for which a backup should be created.                                                                                                                                                                     |
 | TZ                   |               | Timezone to use.                                                                                                                                                                                                                 |
 | CRON_SCHEDULE        | `0 1 * * sun` | Cron schedule for running backups. NOTE: There is no check if there's already a backup running when starting the backup job. Therefore time interval needs to be longer than the maximum expected backup time for all databases. |
-| BACKUP_CLEANUP      | `false` | Set to "true" if you want to let the cronjob remove files older than $BACKUP_AGE days |
-| BACKUP_AGE          | `7` | Number of days to keep backups in backup directory |
+| BACKUP_CLEANUP       | `false`       | Set to "true" if you want to let the cronjob remove files older than $BACKUP_AGE days                                                                                                                                            |
+| BACKUP_AGE           | `7`           | Number of days to keep backups in backup directory                                                                                                                                                                               |
+| SKIP_BACKUP_LOG      | `false`       | Skip step to backup the transaction log .                                                                                                                                                                                        |
+| PACK                 |               | Possible values: `tar`, `zip`. If defined, compresses the output files into a single `.tar.gz` (or `zip`)-File.                                                                                                                  |
+| ZIP_PASSWORD         |               | Sets the password for the zip to the given value. Only works if `PACK` is set to `zip`                                                                                                                                           |
+| PUSH_REMOTE_MODE     |               | The possible values `move` or `copy` activates pushing the backup files to a mapped remote directory. The volume `remote` must be mapped.                                                                                        |
+| SMTP_HOST            |               | If this is set, email reporting is enabled by sending the results of the backup process to `MAIL_TO`. You pretty much have to define all the other `SMTP_*` variables, when the host is defined.                                 |
+| SMTP_PORT            |               | The port of the SMTP server                                                                                                                                                                                                      |
+| SMTP_USER            |               | The username used to login against the SMTP server                                                                                                                                                                               |
+| SMTP_PASS            |               | The password for connecting to the SMTP server                                                                                                                                                                                   |
+| SMTP_FROM            |               | The E-mail address from which mails should be sent from                                                                                                                                                                          |
+| SMTP_TLS             | `on`          | Whether TLS should be used when connecting to the SMTP server                                                                                                                                                                    |
+| MAIL_TO              |               | The target E-mail address for receiving mail reports                                                                                                                                                                             |
 
 ## Examples
 
@@ -85,5 +97,20 @@ services:
     networks:
       - default
 ```
+
+### Example environment
+
+We added a small docker environment in the [example](https://github.com/bbtsoftware/docker-mssql-backup/tree/develop/example)
+subdirectory for `development` or `tests` with a own [readme](https://github.com/bbtsoftware/docker-mssql-backup/blob/develop/example/README.md) file.
+
+## Discussion
+
+For questions and to discuss ideas & feature requests, use the [GitHub discussions on the BBT Software docker-mssql-backup repository](https://github.com/bbtsoftware/docker-mssql-backup/discussions).
+
+[![Join in the discussion on the BBT Software docker-mssql-backup repository](https://img.shields.io/badge/GitHub-Discussions-green?logo=github)](https://github.com/bbtsoftware/docker-mssql-backup/discussions)
+
+## Contributing
+
+Contributions are welcome. See [Contribution Guidelines](CONTRIBUTING.md).
 
 [Microsoft SQL Server]: https://hub.docker.com/_/microsoft-mssql-server
