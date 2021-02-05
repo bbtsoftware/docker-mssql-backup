@@ -14,6 +14,7 @@ services:
       context: ../
     volumes:
       - ./backup:/backup
+      - ./remote:/remote
       - ../backup.sh:/usr/local/bin/backup.sh
     environment:
       - TZ
@@ -27,6 +28,7 @@ services:
       - SKIP_BACKUP_LOG
       - PACK
       - ZIP_PASSWORD
+      - PUSH_REMOTE_MODE
       - SMTP_HOST
       - SMTP_PORT
       - SMTP_USER

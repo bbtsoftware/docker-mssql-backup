@@ -14,12 +14,10 @@ The follow precondition is required for using this examples.
 ## Environment variable
 
 Rename a copy of the template file `.env.template` to `.env` and modify the values of the environment variables.
-The environment file `.env` is ignored by git.
 
 ## Backup directory
 
-The directory `example/backup` will be used for target database backup folder.
-This folder is ignored by git.
+The directory `example/backup` will be used for `target` and `example/remote` is used for the `remote` database backup folder.
 
 ## Test database
 

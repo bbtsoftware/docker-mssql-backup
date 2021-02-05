@@ -10,7 +10,8 @@ ENV DB_SERVER="mssql" \
     BACKUP_AGE=7 \
     SKIP_BACKUP_LOG=false \
     PACK="" \
-    ZIP_PASSWORD=""
+    ZIP_PASSWORD="" \
+    PUSH_REMOTE_MODE="move"
 
 RUN apt-get update && \
     apt-get install -y cron zip && \
