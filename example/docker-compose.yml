@@ -24,6 +24,7 @@ services:
       - DB_PASSWORD
       - DB_NAMES
       - CRON_SCHEDULE
+      - CRON_LOG_SIZE_LIMIT
       - BACKUP_CLEANUP
       - BACKUP_AGE
       - SKIP_BACKUP_LOG

@@ -6,6 +6,7 @@ ENV DB_SERVER="mssql" \
     DB_PASSWORD="" \
     DB_NAMES="" \
     CRON_SCHEDULE="0 1 * * sun" \
+    CRON_LOG_SIZE_LIMIT="10MB" \
     BACKUP_CLEANUP=false \
     BACKUP_AGE=7 \
     SKIP_BACKUP_LOG=false \

@@ -19,6 +19,9 @@ TARGETDIR="/backup"
 # Remote backup directory
 REMOTEDIR="/remote"
 
+# Cron log file
+CRONLOGFILE="/var/log/cron.log"
+
 for CURRENT_DB in $DB_NAMES
 do
 
@@ -119,5 +122,12 @@ do
   fi
 
 done
+
+# Truncate cron log file
+if [[ $CRON_LOG_SIZE_LIMIT ]]
+then
+  echo "Truncate cron log file size to $CRON_LOG_SIZE_LIMIT."
+  truncate --size=$CRON_LOG_SIZE_LIMIT $CRONLOGFILE
+fi
 
 echo "Backup process finished at $(date "+%Y-%m-%d %H:%M:%S")"

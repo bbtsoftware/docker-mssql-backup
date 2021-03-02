@@ -70,13 +70,9 @@ cronSchedule=${cronSchedule#\"}
 if [[ $SMTP_HOST ]];
 then
     echo "Cron e-mail reporting activated. '${SMTP_HOST}'"
-    # (GH-39) Add (-a) paramter to append the log file, otherwise the log file is truncated every run.
-    # echo "$cronSchedule . /container_env.sh; /usr/local/bin/backup.sh 2>&1 | tee -a /var/log/cron.log | mail -s 'SQL Server Backup Result' $MAIL_TO 2>&1 | tee -a /var/log/cron.log" > /etc/cron.d/crontab.conf
-    echo "$cronSchedule . /container_env.sh; /usr/local/bin/backup.sh 2>&1 | tee /var/log/cron.log | mail -s 'SQL Server Backup Result' $MAIL_TO 2>&1 | tee /var/log/cron.log" > /etc/cron.d/crontab.conf
+    echo "$cronSchedule . /container_env.sh; /usr/local/bin/backup.sh 2>&1 | tee -a /var/log/cron.log | mail -s 'SQL Server Backup Result' $MAIL_TO 2>&1 | tee -a /var/log/cron.log" > /etc/cron.d/crontab.conf
 else
-    # (GH-39) Add (-a) paramter to append the log file, otherwise the log file is truncated every run.
-    # echo "$cronSchedule . /container_env.sh; /usr/local/bin/backup.sh 2>&1 | tee -a /var/log/cron.log" > /etc/cron.d/crontab.conf
-    echo "$cronSchedule . /container_env.sh; /usr/local/bin/backup.sh 2>&1 | tee /var/log/cron.log" > /etc/cron.d/crontab.conf
+    echo "$cronSchedule . /container_env.sh; /usr/local/bin/backup.sh 2>&1 | tee -a /var/log/cron.log" > /etc/cron.d/crontab.conf
 fi
 
 # Apply cron job
