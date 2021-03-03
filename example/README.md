@@ -6,10 +6,13 @@ which contains the standard AdventureWorks2019 database from microsoft for backu
 
 ## Preconditions
 
-The follow precondition is required for using this examples.
+The follow precondition is required for using this examples on a desktop.
 
 * Installation of [Docker Desktop](https://www.docker.com/products/docker-desktop) Software.
 * `Docker Desktop` must switch to linux containers.
+
+**NOTE:**
+[Docker Engine](https://docs.docker.com/engine/) provides .deb and .rpm packages for Linux distribution
 
 ## Environment variable
 
@@ -29,6 +32,17 @@ is used for backup.
 To run this example container execute the command:
 
 `docker-compose up`
+
+## Logging
+
+The backup container cron job write logs to stdout and stderr output streams. Docker containers emit logs to the stdout
+and stderr output streams. Because containers are stateless, the logs are stored on the Docker host in JSON files by default.
+
+`docker logs [Container]`
+
+**NOTE:**
+The log file location can get with follow docker command:
+`docker inspect --format='{{.LogPath}}' [container-id or container-name]`
 
 ## Test backup file cleanup
 
