@@ -83,11 +83,11 @@ do
   # Push to remote directory
   if [ "$PUSH_REMOTE_MODE" = "move" ] || [ "$PUSH_REMOTE_MODE" = "copy" ]; then
     echo "Push backup to remote directory"
-    find $TARGETDIR -maxdepth 1 -type f -name "BACKUPNAME.*" -exec cp {} $REMOTEDIR \;
+    find $TARGETDIR -maxdepth 1 -type f -name "$BACKUPNAME.*" -exec cp {} $REMOTEDIR \;
 
     if [ "$PUSH_REMOTE_MODE" = "move" ]; then
       echo "Cleanup target directory"
-      find $TARGETDIR -maxdepth 1 -type f -name "BACKUPNAME.*" -exec rm {} \;
+      find $TARGETDIR -maxdepth 1 -type f -name "$BACKUPNAME.*" -exec rm {} \;
     fi
   fi
 
