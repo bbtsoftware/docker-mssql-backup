@@ -10,9 +10,6 @@ echo "Backup started at $(date "+%Y-%m-%d %H:%M:%S")"
 
 CURRENT_DATE=$(date +%Y%m%d%H%M)
 
-# Intermediate working backup directory
-WORKDIR="/backup/$CURRENT_DATE"
-
 # Target backup directory
 TARGETDIR="/backup"
 
@@ -22,8 +19,10 @@ REMOTEDIR="/remote"
 for CURRENT_DB in $DB_NAMES
 do
 
+  BACKUPNAME=$CURRENT_DATE.$CURRENT_DB
+
   # backup database files
-  BAK_FILENAME=$WORKDIR/$CURRENT_DATE.$CURRENT_DB.bak
+  BAK_FILENAME=$TARGETDIR/$BACKUPNAME.bak
 
   echo "Backup database $CURRENT_DB to $BAK_FILENAME on $DB_SERVER..."
   if /opt/mssql-tools/bin/sqlcmd -S "$DB_SERVER" -U "$DB_USER" -P "$DB_PASSWORD" -b -Q "BACKUP DATABASE [$CURRENT_DB] TO DISK = N'$BAK_FILENAME' WITH NOFORMAT, NOINIT, NAME = '$CURRENT_DB-full', SKIP, NOUNLOAD, STATS = 10"
@@ -36,7 +35,7 @@ do
 
   # backup log files
   if [ "$SKIP_BACKUP_LOG" = false ]; then
-    TRN_FILENAME=$WORKDIR/$CURRENT_DATE.$CURRENT_DB.trn
+    TRN_FILENAME=$TARGETDIR/$BACKUPNAME.trn
 
     echo "Backup log of $CURRENT_DB to $TRN_FILENAME on $DB_SERVER..."
     if /opt/mssql-tools/bin/sqlcmd -S "$DB_SERVER" -U "$DB_USER" -P "$DB_PASSWORD" -b -Q "BACKUP LOG [$CURRENT_DB] TO DISK = N'$TRN_FILENAME' WITH NOFORMAT, NOINIT, NAME = '$CURRENT_DB-log', SKIP, NOUNLOAD, STATS = 10"
@@ -47,6 +46,7 @@ do
       rm -rf "$TRN_FILENAME"
     fi
   else
+    $TRN_FILENAME=""
     echo "Backup of log skipped."
   fi
 
@@ -54,13 +54,13 @@ do
     # compress backup files into tar.gz or zip file
     echo ""
     echo "Compress backup files"
-    FILES=$(find $WORKDIR -type f \( -name \*\.bak -o -name \*\.trn \))
+    FILES=$(find $TARGETDIR -maxdepth 1 -type f \( -name "$BACKUPNAME.bak" -o -name "$BACKUPNAME.trn" \) )
     if [ "$PACK" = "tar" ]; then
-      ARCHIVE_FILENAME="$WORKDIR/$CURRENT_DATE.$CURRENT_DB.tar.gz"
+      ARCHIVE_FILENAME="$TARGETDIR/$BACKUPNAME.tar.gz"
       tar cfvz "$ARCHIVE_FILENAME" $FILES
       retval=$?
     elif [ "$PACK" = "zip" ]; then
-      ARCHIVE_FILENAME="$WORKDIR/$CURRENT_DATE.$CURRENT_DB.zip"
+      ARCHIVE_FILENAME="$TARGETDIR/$BACKUPNAME.zip"
       if [ "$ZIP_PASSWORD" ]; then
         zip --password "$ZIP_PASSWORD" "$ARCHIVE_FILENAME" $FILES
         retval=$?
@@ -73,34 +73,23 @@ do
     echo "Packing up results to $ARCHIVE_FILENAME"
     if [ $retval -eq 0 ]; then
         echo "Successfully packed backup into $ARCHIVE_FILENAME"
-        cp "$ARCHIVE_FILENAME" "$TARGETDIR"
     else
         echo "Failed creating $ARCHIVE_FILENAME"
     fi
 
     rm -rf $FILES
-  else
-    # Move files from intermediate work to target directory
-    echo "Copy backup files to target directory"
-    find $WORKDIR -type f -name "*.$CURRENT_DB.bak"     -exec cp {} $TARGETDIR \;
-    find $WORKDIR -type f -name "*.$CURRENT_DB.trn"     -exec cp {} $TARGETDIR \;
   fi
 
   # Push to remote directory
   if [ "$PUSH_REMOTE_MODE" = "move" ] || [ "$PUSH_REMOTE_MODE" = "copy" ]; then
     echo "Push backup to remote directory"
-    find $WORKDIR -type f -name "*.$CURRENT_DB.*" -exec cp {} $REMOTEDIR \;
+    find $TARGETDIR -maxdepth 1 -type f -name "BACKUPNAME.*" -exec cp {} $REMOTEDIR \;
 
     if [ "$PUSH_REMOTE_MODE" = "move" ]; then
       echo "Cleanup target directory"
-      find $TARGETDIR -type f -name "*.$CURRENT_DB.*" -exec rm {} \;
+      find $TARGETDIR -maxdepth 1 -type f -name "BACKUPNAME.*" -exec rm {} \;
     fi
   fi
-
-  # Cleanup intermediate directory
-  echo "Cleanup intermediate directory"
-  find $WORKDIR -type f -name "*.$CURRENT_DB.*" -exec rm {} \;
-  rm -rf $WORKDIR
 
   # Cleanup old backup files in target directory
   if [ "$BACKUP_CLEANUP" = true ]; then
