@@ -33,6 +33,7 @@ For using the cleanup feature attach the same `/backup` volume in the `bbtsoftwa
 | 0.2.0  | Release [0.2.0](https://github.com/bbtsoftware/docker-mssql-backup/releases/tag/0.2.0)  | ![Size](https://shields.beevelop.com/docker/image/image-size/bbtsoftwareag/mssql-backup/0.2.0.svg?style=flat-square)  |
 | 0.3.0  | Release [0.3.0](https://github.com/bbtsoftware/docker-mssql-backup/releases/tag/0.3.0)  | ![Size](https://shields.beevelop.com/docker/image/image-size/bbtsoftwareag/mssql-backup/0.3.0.svg?style=flat-square)  |
 | 0.4.0  | Release [0.4.0](https://github.com/bbtsoftware/docker-mssql-backup/releases/tag/0.4.0)  | ![Size](https://shields.beevelop.com/docker/image/image-size/bbtsoftwareag/mssql-backup/0.4.0.svg?style=flat-square)  |
+| 0.5.0  | Release [0.5.0](https://github.com/bbtsoftware/docker-mssql-backup/releases/tag/0.5.0)  | ![Size](https://shields.beevelop.com/docker/image/image-size/bbtsoftwareag/mssql-backup/0.5.0.svg?style=flat-square)  |
 
 ### Configuration
 
