@@ -16,6 +16,8 @@ TARGETDIR="/backup"
 # Remote backup directory
 REMOTEDIR="/remote"
 
+[ "$DB_NAMES" = "*" ] && DB_NAMES=`/opt/mssql-tools/bin/sqlcmd -S "$DB_SERVER" -U "$DB_USER" -P "$DB_PASSWORD" -b -h -1 -Q "SELECT name FROM sys.databases WHERE name NOT IN ('master', 'model', 'tempdb', 'msdb')" | awk '/^[a-z]/'`
+
 for CURRENT_DB in $DB_NAMES
 do
 
