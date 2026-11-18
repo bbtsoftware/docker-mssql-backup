@@ -1,3 +1,7 @@
+> [!IMPORTANT]
+> This repository has been archived and is no longer actively maintained.
+> No further updates or support are planned.
+
 # Docker image for backup of Microsoft SQL Server
 
 Docker image to create regular backups of a [Microsoft SQL Server] image.
